@@ -129,18 +129,39 @@ public class HexGridCell {
         mX = i * SIDE;
         mY = HEIGHT * (2 * j + (i % 2)) / 2;
     }
+    
+    /**
+     * Integer division operation, with wraping for the negative divisors.
+     * 
+     * @param a divisor
+     * @param b dividend, must be positive
+     */
+    private static int intDiv(int a, int b) {
+        return (a > 0) ? a / b : a / b - 1;
+    }
+
+    /**
+     * Integer division modulus operation, with wraping for the negative
+     * divisors.
+     * 
+     * @param a divisor
+     * @param b dividend, must be positive
+     */
+    private static int intMod(int a, int b) {
+        return (a > 0) ? a % b : b + a % b;
+    }
 
     /**
      * Sets the cell as corresponding to some point inside it (can be used for
      * e.g. mouse picking).
      */
     public void setCellByPoint(int x, int y) {
-        int ci = x / SIDE;
-        int cx = x % SIDE;
+        int ci = intDiv(x, SIDE);
+        int cx = intMod(x, SIDE);
 
         int ty = y - (ci % 2) * HEIGHT / 2;
-        int cj = ty / HEIGHT;
-        int cy = ty % HEIGHT;
+        int cj = intDiv(ty, HEIGHT);
+        int cy = intMod(ty, HEIGHT);
 
         if (cx > Math.abs(RADIUS / 2 - RADIUS * cy / HEIGHT)) {
             setCellIndex(ci, cj);
